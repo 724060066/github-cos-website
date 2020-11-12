@@ -1,6 +1,10 @@
 name: github-cos-website-ci
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
@@ -8,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install coscmd
-      run: sudo pip install coscmd
-    - name: Configure coscmd
-      env: 
-        SECRET_ID: ${{ secrets.SECRET_ID }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        BUCKET: github-cos-website-1259719592
-        REGION: ap-beijing
-      run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
-    - name: Upload to cos
-      run: coscmd upload -r ./ / --ignore "./.git/*"
+      - uses: actions/checkout@v2
+      - name: Install coscmd
+        run: sudo pip install coscmd
+      - name: Configure coscmd
+        env:
+          SECRET_ID: ${{ secrets.SECRET_ID }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          BUCKET: github-cos-website-1259719592
+          REGION: ap-beijing
+        run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
+      - name: Upload to cos
+        run: coscmd upload -r ./ / --ignore "./.git/*"
